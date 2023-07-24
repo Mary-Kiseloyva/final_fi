@@ -52,10 +52,8 @@ class _CatalogPageState extends State<CatalogPage> {
               itemBuilder: (context, index) {
                 final product = products[index];
                 return GestureDetector(
-                  onTap: () async {
-                    // before
-                    context.router.push(ProductRoute(productId: product.id));
-                    // after
+                  onTap: ()  {
+                    context.router.navigate(ProductRoute(productId: product.id));
                   },
                   child: ProductCard(
                     product: product,

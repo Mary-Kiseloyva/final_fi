@@ -17,7 +17,7 @@ class ProductDetails with _$ProductDetails {
     required List<Badge> badges,
     required String name,
     String? brand,
-    String? picture,
+    required String picture,
     String? article,
     String? description,
     bool? available,

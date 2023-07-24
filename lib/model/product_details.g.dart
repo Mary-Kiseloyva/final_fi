@@ -15,7 +15,7 @@ _$_ProductDetails _$$_ProductDetailsFromJson(Map<String, dynamic> json) =>
           .toList(),
       name: json['name'] as String,
       brand: json['brand'] as String?,
-      picture: json['picture'] as String?,
+      picture: json['picture'] as String,
       article: json['article'] as String?,
       description: json['description'] as String?,
       available: json['available'] as bool?,
@@ -42,7 +42,7 @@ Map<String, dynamic> _$$_ProductDetailsToJson(_$_ProductDetails instance) {
   }
 
   writeNotNull('brand', instance.brand);
-  writeNotNull('picture', instance.picture);
+  val['picture'] = instance.picture;
   writeNotNull('article', instance.article);
   writeNotNull('description', instance.description);
   writeNotNull('available', instance.available);

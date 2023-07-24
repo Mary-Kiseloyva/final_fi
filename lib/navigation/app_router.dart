@@ -12,6 +12,7 @@ import 'package:fi/view/home.dart';
 
 import '../model/cart.dart';
 import '../model/order.dart';
+import '../model/product.dart';
 
 part 'app_router.gr.dart';
 

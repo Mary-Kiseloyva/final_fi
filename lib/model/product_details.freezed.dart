@@ -25,7 +25,7 @@ mixin _$ProductDetails {
   List<Badge> get badges => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   String? get brand => throw _privateConstructorUsedError;
-  String? get picture => throw _privateConstructorUsedError;
+  String get picture => throw _privateConstructorUsedError;
   String? get article => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
   bool? get available => throw _privateConstructorUsedError;
@@ -55,7 +55,7 @@ abstract class $ProductDetailsCopyWith<$Res> {
       List<Badge> badges,
       String name,
       String? brand,
-      String? picture,
+      String picture,
       String? article,
       String? description,
       bool? available,
@@ -83,7 +83,7 @@ class _$ProductDetailsCopyWithImpl<$Res, $Val extends ProductDetails>
     Object? badges = null,
     Object? name = null,
     Object? brand = freezed,
-    Object? picture = freezed,
+    Object? picture = null,
     Object? article = freezed,
     Object? description = freezed,
     Object? available = freezed,
@@ -113,10 +113,10 @@ class _$ProductDetailsCopyWithImpl<$Res, $Val extends ProductDetails>
           ? _value.brand
           : brand // ignore: cast_nullable_to_non_nullable
               as String?,
-      picture: freezed == picture
+      picture: null == picture
           ? _value.picture
           : picture // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       article: freezed == article
           ? _value.article
           : article // ignore: cast_nullable_to_non_nullable
@@ -163,7 +163,7 @@ abstract class _$$_ProductDetailsCopyWith<$Res>
       List<Badge> badges,
       String name,
       String? brand,
-      String? picture,
+      String picture,
       String? article,
       String? description,
       bool? available,
@@ -189,7 +189,7 @@ class __$$_ProductDetailsCopyWithImpl<$Res>
     Object? badges = null,
     Object? name = null,
     Object? brand = freezed,
-    Object? picture = freezed,
+    Object? picture = null,
     Object? article = freezed,
     Object? description = freezed,
     Object? available = freezed,
@@ -219,10 +219,10 @@ class __$$_ProductDetailsCopyWithImpl<$Res>
           ? _value.brand
           : brand // ignore: cast_nullable_to_non_nullable
               as String?,
-      picture: freezed == picture
+      picture: null == picture
           ? _value.picture
           : picture // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       article: freezed == article
           ? _value.article
           : article // ignore: cast_nullable_to_non_nullable
@@ -265,7 +265,7 @@ class _$_ProductDetails implements _ProductDetails {
       required final List<Badge> badges,
       required this.name,
       this.brand,
-      this.picture,
+      required this.picture,
       this.article,
       this.description,
       this.available,
@@ -295,7 +295,7 @@ class _$_ProductDetails implements _ProductDetails {
   @override
   final String? brand;
   @override
-  final String? picture;
+  final String picture;
   @override
   final String? article;
   @override
@@ -383,7 +383,7 @@ abstract class _ProductDetails implements ProductDetails {
       required final List<Badge> badges,
       required final String name,
       final String? brand,
-      final String? picture,
+      required final String picture,
       final String? article,
       final String? description,
       final bool? available,
@@ -406,7 +406,7 @@ abstract class _ProductDetails implements ProductDetails {
   @override
   String? get brand;
   @override
-  String? get picture;
+  String get picture;
   @override
   String? get article;
   @override
