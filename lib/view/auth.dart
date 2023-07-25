@@ -15,7 +15,6 @@ class AuthPage extends StatefulWidget {
 
 class _AuthPageState extends State<AuthPage> {
   final AuthViewModel authViewModel = AuthViewModel();
-  final TextEditingController emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +32,7 @@ class _AuthPageState extends State<AuthPage> {
             Padding(
               padding: const EdgeInsets.all(20),
               child: TextField(
-                controller: emailController,
+                controller: authViewModel.emailController,
                 decoration: const InputDecoration(
                   hintText: "example@yandex.ru",
                 ),
@@ -43,12 +42,12 @@ class _AuthPageState extends State<AuthPage> {
               width: 200,
               child: OutlinedButton(
                 onPressed: () async {
-                  final email = emailController.text;
-                  if (!authViewModel.validateEmail(email)) {
+                  if (!authViewModel.validateEmail()) {
                     showInvalidEmailAlert();
                     return;
                   }
-                  final isRegistered = await authViewModel.requestCode(email);
+                  final isRegistered = await authViewModel.requestCode();
+                  final email = authViewModel.emailController.text;
                   if (isRegistered) {
                     context.router.push(AuthCodeRoute(email: email));
                   } else {
@@ -89,7 +88,7 @@ class _AuthPageState extends State<AuthPage> {
   @override
   void dispose() {
     super.dispose();
-    emailController.dispose();
+    authViewModel.dispose();
   }
 }
 

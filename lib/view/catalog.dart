@@ -52,35 +52,43 @@ class _CatalogPageState extends State<CatalogPage> {
               itemBuilder: (context, index) {
                 final product = products[index];
                 return GestureDetector(
-                  onTap: ()  {
-                    context.router.navigate(ProductRoute(productId: product.id));
+                  onTap: () {
+                    context.router
+                        .navigate(ProductRoute(productId: product.id));
                   },
                   child: ProductCard(
                     product: product,
                     add: () => {
-                      catalogViewModel
-                          .addProduct(product.id)
-                          .then((value) => context.showSnackBar('Добавлено: ${product.name}'))
-                          .catchError((error, stackTrace) {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                            title: const Text('Внимание'),
-                            content: const Text('Вы не авторизованны'),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () =>
-                                    context.router.navigate(const AuthRoute()),
-                                child: const Text('Войти'),
-                              ),
-                              TextButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: const Text('Отмена'),
-                              ),
-                            ],
-                          ),
-                        );
-                      })
+                      if (catalogViewModel.isLoggedIn())
+                        {
+                          catalogViewModel
+                              .addProduct(product.id)
+                              .then((value) => context
+                                  .showSnackBar('Добавлено: ${product.name}'))
+                              .catchError((error, stackTrace) =>
+                                  context.showSnackBar('Ошибка'))
+                        }
+                      else
+                        {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                              title: const Text('Внимание'),
+                              content: const Text('Вы не авторизованны'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () => context.router
+                                      .navigate(const AuthRoute()),
+                                  child: const Text('Войти'),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text('Отмена'),
+                                ),
+                              ],
+                            ),
+                          )
+                        }
                     },
                   ),
                 );

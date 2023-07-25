@@ -19,15 +19,12 @@ class AuthCodePage extends StatefulWidget {
 }
 
 class _AuthCodePageState extends State<AuthCodePage> {
-  final TextEditingController codeController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
   final AuthCodeViewModel authCodeViewModel = AuthCodeViewModel();
-
 
   @override
   void initState() {
     super.initState();
-    emailController.text = widget.email;
+    authCodeViewModel.emailController.text = widget.email;
   }
 
   @override
@@ -47,12 +44,12 @@ class _AuthCodePageState extends State<AuthCodePage> {
             ),
             TextField(
               enabled: false,
-              controller: emailController,
+              controller: authCodeViewModel.emailController,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: CodeWidget(
-                codeController: codeController,
+                codeController: authCodeViewModel.codeController,
               ),
             ),
             SizedBox(
@@ -60,7 +57,7 @@ class _AuthCodePageState extends State<AuthCodePage> {
               child: OutlinedButton(
                 onPressed: () {
                   authCodeViewModel
-                      .sendCode(codeController.text, widget.email)
+                      .sendCode()
                       .then((value) => context.router.popUntilRoot())
                       .catchError((error, stackTrace) {
                     context.showSnackBar('Неверный код');
@@ -78,8 +75,7 @@ class _AuthCodePageState extends State<AuthCodePage> {
   @override
   void dispose() {
     super.dispose();
-    codeController.dispose();
-    emailController.dispose();
+    authCodeViewModel.dispose();
   }
 }
 

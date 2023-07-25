@@ -5,19 +5,21 @@ import 'package:flutter/cupertino.dart';
 
 import '../data/entity/auth/auth_email_part1_request.dart';
 import '../util/app_components.dart';
+import 'base_view_model.dart';
 
-class AuthViewModel {
+class AuthViewModel extends BaseViewModel {
   final AuthService authService = AppComponents().authService;
+  final TextEditingController emailController = TextEditingController();
 
-  bool validateEmail(String email) {
-    return ConstantsUtils.emailRegExp.hasMatch(email);
+  bool validateEmail() {
+    return ConstantsUtils.emailRegExp.hasMatch(emailController.text);
   }
 
-  Future<bool> requestCode(String email) async {
+  Future<bool> requestCode() async {
     try {
       await authService.authEmailPart1(
         request: AuthEmailPart1Request(
-          email: email,
+          email: emailController.text,
           digits: ConstantsUtils.validationCodeDigits,
         ),
       );
@@ -30,5 +32,10 @@ class AuthViewModel {
       }
     }
     return true;
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
   }
 }

@@ -34,10 +34,11 @@ class _OrderResultPageState extends State<OrderResultPage> {
               child: Text('Заказ №${widget.order?.id} успешно создан'),
             ),
             OutlinedButton(
-                onPressed: () {
-                  context.router.popUntilRoot();
-                },
-                child: const Text('Перейти к покупкам')),
+              onPressed: () {
+                context.router.popUntilRoot();
+              },
+              child: const Text('Перейти к покупкам'),
+            ),
           ],
         ),
       ),

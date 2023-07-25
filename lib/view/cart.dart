@@ -18,12 +18,13 @@ class CartPage extends StatefulWidget {
 class _CartPageState extends State<CartPage> {
   final CartViewModel cartViewModel = CartViewModel();
 
-
   @override
   void initState() {
     super.initState();
-    cartViewModel.initCart();
-    cartViewModel.loadCart();
+    cartViewModel.init();
+    if (cartViewModel.isLoggedIn()) {
+      cartViewModel.loadCart();
+    }
   }
 
   @override
@@ -35,20 +36,20 @@ class _CartPageState extends State<CartPage> {
       ),
       body: SafeArea(
         child: Builder(builder: (context) {
-          if (!cartViewModel.isLoggedIn()) {
-            return Center(
-              child: OutlinedButton(
-                onPressed: () {
-                  context.router.navigate(const AuthRoute());
-                },
-                child: const Text("Войти / Зарегистрироваться"),
-              ),
-            );
-          }
           return StreamBuilder<Cart>(
             stream: cartViewModel.cartController.stream,
             builder: (context, snapshot) {
               final cart = snapshot.data;
+              if (!cartViewModel.isLoggedIn()) {
+                return Center(
+                  child: OutlinedButton(
+                    onPressed: () {
+                      context.router.navigate(const AuthRoute());
+                    },
+                    child: const Text("Войти / Зарегистрироваться"),
+                  ),
+                );
+              }
               if (cart == null) {
                 return const Center(
                   child: CupertinoActivityIndicator(),

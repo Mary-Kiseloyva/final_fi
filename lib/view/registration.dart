@@ -1,6 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:fi/navigation/app_router.dart';
-import 'package:fi/util/value_stream_wrapper.dart';
+import 'package:fi/util/snack_bar_util.dart';
 import 'package:fi/view/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,16 +22,11 @@ class RegistrationPage extends StatefulWidget {
 
 class _RegistrationPageState extends State<RegistrationPage> {
   final RegistrationViewModel registrationViewModel = RegistrationViewModel();
-  final TextEditingController firstNameController = TextEditingController();
-  final TextEditingController secondNameController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final ValueStreamWrapper<String> genderController = ValueStreamWrapper();
 
   @override
   void initState() {
     super.initState();
-    emailController.text = widget.email;
+    registrationViewModel.emailController.text = widget.email;
   }
 
   @override
@@ -45,24 +40,24 @@ class _RegistrationPageState extends State<RegistrationPage> {
         child: Column(
           children: [
             InputWidget(
-              textController: firstNameController,
+              textController: registrationViewModel.firstNameController,
               hintText: 'Иван',
             ),
             InputWidget(
-              textController: secondNameController,
+              textController: registrationViewModel.secondNameController,
               hintText: 'Иванов',
             ),
             InputWidget(
-              textController: phoneController,
+              textController: registrationViewModel.phoneController,
               hintText: '+7 (000) 000-00-00',
             ),
             InputWidget(
-              textController: emailController,
+              textController: registrationViewModel.emailController,
               hintText: '',
               enabled: false,
             ),
             StreamBuilder<String?>(
-              stream: genderController.stream,
+              stream: registrationViewModel.genderController.stream,
               builder: (context, genderSnapshot) {
                 return Padding(
                   padding: const EdgeInsets.only(top: 20, right: 20, left: 20),
@@ -72,7 +67,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         label: 'Муж',
                         value: genderSnapshot.data == 'male',
                         onChanged: () {
-                          genderController.add('male');
+                          registrationViewModel.genderController.add('male');
                         },
                       ),
                       const SizedBox(width: 32),
@@ -80,7 +75,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         label: 'Жен',
                         value: genderSnapshot.data == 'female',
                         onChanged: () {
-                          genderController.add('female');
+                          registrationViewModel.genderController.add('female');
                         },
                       ),
                     ],
@@ -104,15 +99,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       onPressed: () {
                         debugPrint('you');
                         registrationViewModel
-                            .registerUser(
-                                widget.email,
-                                firstNameController.text,
-                                secondNameController.text,
-                                phoneController.text,
-                                genderController.valueOrNull)
+                            .registerUser()
                             .then((value) => context.router.push(
                                   AuthCodeRoute(email: widget.email),
-                                ));
+                                ))
+                            .catchError((error, stackTrace) =>
+                                context.showSnackBar('Неверные данные'));
                       },
                       child: const Text('Сохранить'),
                     ),
@@ -129,10 +121,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   @override
   void dispose() {
     super.dispose();
-    firstNameController.dispose();
-    secondNameController.dispose();
-    emailController.dispose();
-    genderController.dispose();
+    registrationViewModel.dispose();
   }
 }
 

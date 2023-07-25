@@ -1,21 +1,25 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:fi/util/value_stream_wrapper.dart';
+
 import '../data/repository/cart_repository.dart';
 import '../data/repository/token_ropository.dart';
 import '../model/cart.dart';
 import '../util/app_components.dart';
+import 'base_view_model.dart';
 
-class BaseCartViewModel {
+class BaseCartViewModel extends BaseViewModel {
   final CartRepository cartRepository = AppComponents().cartRepository;
   final TokenRepository tokenRepository = AppComponents().tokenRepository;
-  StreamController<Cart> cartController = StreamController.broadcast();
+  final ValueStreamWrapper<Cart> cartController = ValueStreamWrapper();
 
   late VoidCallback cartListener = () {
     cartController.add(cartRepository.cart);
   };
 
-  void initCart() {
+  @override
+  void init() {
     cartRepository.addListener(cartListener);
   }
 
@@ -39,8 +43,9 @@ class BaseCartViewModel {
     return tokenRepository.auth;
   }
 
+  @override
   void dispose() {
     cartRepository.removeListener(cartListener);
-    cartController.close();
+    cartController.dispose();
   }
 }

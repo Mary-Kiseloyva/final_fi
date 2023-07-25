@@ -6,7 +6,7 @@ import 'package:fi/view_model/base_cart_view_model.dart';
 
 import '../model/product_details.dart';
 
-class ProductViewModel extends BaseCartViewModel{
+class ProductViewModel extends BaseCartViewModel {
   final CatalogService catalogService = AppComponents().catalogService;
 
   Future<ProductDetails> getProductDetails(int productId) {
