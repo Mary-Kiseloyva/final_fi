@@ -2,11 +2,13 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fi/navigation/app_router.dart';
 import 'package:fi/util/snack_bar_util.dart';
+import 'package:fi/view_model/cart_view_model.dart';
 import 'package:fi/view_model/catalog_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
 import '../model/product.dart';
 import '../util/pagination_builder.dart';
@@ -167,6 +169,7 @@ class TabBarExample extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cartViewModel = context.read<CartViewModel>();
     return DefaultTabController(
       initialIndex: 1,
       length: 3,
@@ -221,39 +224,38 @@ class TabBarExample extends StatelessWidget {
                           child: ProductCard(
                             product: product,
                             add: () => {
-                              if (catalogViewModel.isLoggedIn())
-                                {
-                                  catalogViewModel
-                                      .addProduct(product.id)
+                              // if (catalogViewModel.isLoggedIn())
+                              //   {
+                            cartViewModel.addProduct(product)
                                       .then((value) => context.showSnackBar(
                                           'Добавлено: ${product.name}'))
                                       .catchError((error, stackTrace) =>
                                           context.showSnackBar('Ошибка'))
-                                }
-                              else
-                                {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) =>
-                                        AlertDialog(
-                                      title: const Text('Внимание'),
-                                      content:
-                                          const Text('Вы не авторизованны'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () => context.router
-                                              .navigate(const AuthRoute()),
-                                          child: const Text('Войти'),
-                                        ),
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context),
-                                          child: const Text('Отмена'),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                }
+                                //}
+                              // else
+                              //   {
+                              //     showDialog(
+                              //       context: context,
+                              //       builder: (BuildContext context) =>
+                              //           AlertDialog(
+                              //         title: const Text('Внимание'),
+                              //         content:
+                              //             const Text('Вы не авторизованны'),
+                              //         actions: <Widget>[
+                              //           TextButton(
+                              //             onPressed: () => context.router
+                              //                 .navigate(const AuthRoute()),
+                              //             child: const Text('Войти'),
+                              //           ),
+                              //           TextButton(
+                              //             onPressed: () =>
+                              //                 Navigator.pop(context),
+                              //             child: const Text('Отмена'),
+                              //           ),
+                              //         ],
+                              //       ),
+                              //     )
+                              //   }
                             },
                           ),
                         );
@@ -261,11 +263,89 @@ class TabBarExample extends StatelessWidget {
                     );
                   },
                 ),
-                Center(
-                  child: Text("It's rainy here"),
+                PaginationBuilder<Product>(
+                  paginationCallback: catalogViewModel.loadProducts,
+                  builder: (context, controller, snapshot) {
+                    final products = snapshot.data;
+                    if (products == null) {
+                      return const Center(
+                        child: CupertinoActivityIndicator(),
+                      );
+                    }
+                    return GridView.builder(
+                      shrinkWrap: true,
+                      controller: controller,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 1.3 *
+                            MediaQuery.of(context).size.width /
+                            MediaQuery.of(context).size.height,
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      itemCount: products.length,
+                      itemBuilder: (context, index) {
+                        final product = products[index];
+                        return GestureDetector(
+                          onTap: () {
+                            context.router
+                                .navigate(ProductRoute(productId: product.id));
+                          },
+                          child: ProductCard(
+                            product: product,
+                            add: () => {
+                              cartViewModel.addProduct(product)
+                                  .then((value) => context.showSnackBar(
+                                  'Добавлено: ${product.name}'))
+                                  .catchError((error, stackTrace) =>
+                                  context.showSnackBar('Ошибка'))
+                            },
+                          ),
+                        );
+                      },
+                    );
+                  },
                 ),
-                Center(
-                  child: Text("It's sunny here"),
+                PaginationBuilder<Product>(
+                  paginationCallback: catalogViewModel.loadProducts,
+                  builder: (context, controller, snapshot) {
+                    final products = snapshot.data;
+                    if (products == null) {
+                      return const Center(
+                        child: CupertinoActivityIndicator(),
+                      );
+                    }
+                    return GridView.builder(
+                      shrinkWrap: true,
+                      controller: controller,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 1.3 *
+                            MediaQuery.of(context).size.width /
+                            MediaQuery.of(context).size.height,
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      itemCount: products.length,
+                      itemBuilder: (context, index) {
+                        final product = products[index];
+                        return GestureDetector(
+                          onTap: () {
+                            context.router
+                                .navigate(ProductRoute(productId: product.id));
+                          },
+                          child: ProductCard(
+                            product: product,
+                            add: () => {
+                              cartViewModel.addProduct(product)
+                                  .then((value) => context.showSnackBar(
+                                  'Добавлено: ${product.name}'))
+                                  .catchError((error, stackTrace) =>
+                                  context.showSnackBar('Ошибка'))
+                            },
+                          ),
+                        );
+                      },
+                    );
+                  },
                 ),
               ],
             ),

@@ -27,63 +27,10 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const CartTabPage(),
       );
     },
-    AuthRoute.name: (routeData) {
+    ProfileTab.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const AuthPage(),
-      );
-    },
-    AuthCodeRoute.name: (routeData) {
-      final pathParams = routeData.inheritedPathParams;
-      final args = routeData.argsAs<AuthCodeRouteArgs>(
-          orElse: () =>
-              AuthCodeRouteArgs(email: pathParams.getString('email')));
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: AuthCodePage(
-          key: args.key,
-          email: args.email,
-        ),
-      );
-    },
-    CartRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const CartPage(),
-      );
-    },
-    CatalogRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const CatalogPage(),
-      );
-    },
-    HomeRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const HomePage(),
-      );
-    },
-    OrderRoute.name: (routeData) {
-      final args = routeData.argsAs<OrderRouteArgs>(
-          orElse: () => const OrderRouteArgs());
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: OrderPage(
-          key: args.key,
-          cart: args.cart,
-        ),
-      );
-    },
-    OrderResultRoute.name: (routeData) {
-      final args = routeData.argsAs<OrderResultRouteArgs>(
-          orElse: () => const OrderResultRouteArgs());
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: OrderResultPage(
-          key: args.key,
-          order: args.order,
-        ),
+        child: const ProfileTabPage(),
       );
     },
     ProductRoute.name: (routeData) {
@@ -99,6 +46,54 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    HomeRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const HomePage(),
+      );
+    },
+    AuthRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const AuthPage(),
+      );
+    },
+    CatalogRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const CatalogPage(),
+      );
+    },
+    ProfileRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ProfilePage(),
+      );
+    },
+    OrderRoute.name: (routeData) {
+      final args = routeData.argsAs<OrderRouteArgs>(
+          orElse: () => const OrderRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: OrderPage(
+          key: args.key,
+          cart: args.cart,
+        ),
+      );
+    },
+    AuthCodeRoute.name: (routeData) {
+      final pathParams = routeData.inheritedPathParams;
+      final args = routeData.argsAs<AuthCodeRouteArgs>(
+          orElse: () =>
+              AuthCodeRouteArgs(email: pathParams.getString('email')));
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: AuthCodePage(
+          key: args.key,
+          email: args.email,
+        ),
+      );
+    },
     RegistrationRoute.name: (routeData) {
       final pathParams = routeData.inheritedPathParams;
       final args = routeData.argsAs<RegistrationRouteArgs>(
@@ -110,6 +105,23 @@ abstract class _$AppRouter extends RootStackRouter {
           key: args.key,
           email: args.email,
         ),
+      );
+    },
+    OrderResultRoute.name: (routeData) {
+      final args = routeData.argsAs<OrderResultRouteArgs>(
+          orElse: () => const OrderResultRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: OrderResultPage(
+          key: args.key,
+          order: args.order,
+        ),
+      );
+    },
+    CartRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const CartPage(),
       );
     },
   };
@@ -144,173 +156,17 @@ class CartTab extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [AuthPage]
-class AuthRoute extends PageRouteInfo<void> {
-  const AuthRoute({List<PageRouteInfo>? children})
+/// [ProfileTabPage]
+class ProfileTab extends PageRouteInfo<void> {
+  const ProfileTab({List<PageRouteInfo>? children})
       : super(
-          AuthRoute.name,
+          ProfileTab.name,
           initialChildren: children,
         );
 
-  static const String name = 'AuthRoute';
+  static const String name = 'ProfileTab';
 
   static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [AuthCodePage]
-class AuthCodeRoute extends PageRouteInfo<AuthCodeRouteArgs> {
-  AuthCodeRoute({
-    Key? key,
-    required String email,
-    List<PageRouteInfo>? children,
-  }) : super(
-          AuthCodeRoute.name,
-          args: AuthCodeRouteArgs(
-            key: key,
-            email: email,
-          ),
-          rawPathParams: {'email': email},
-          initialChildren: children,
-        );
-
-  static const String name = 'AuthCodeRoute';
-
-  static const PageInfo<AuthCodeRouteArgs> page =
-      PageInfo<AuthCodeRouteArgs>(name);
-}
-
-class AuthCodeRouteArgs {
-  const AuthCodeRouteArgs({
-    this.key,
-    required this.email,
-  });
-
-  final Key? key;
-
-  final String email;
-
-  @override
-  String toString() {
-    return 'AuthCodeRouteArgs{key: $key, email: $email}';
-  }
-}
-
-/// generated route for
-/// [CartPage]
-class CartRoute extends PageRouteInfo<void> {
-  const CartRoute({List<PageRouteInfo>? children})
-      : super(
-          CartRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'CartRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [CatalogPage]
-class CatalogRoute extends PageRouteInfo<void> {
-  const CatalogRoute({List<PageRouteInfo>? children})
-      : super(
-          CatalogRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'CatalogRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [HomePage]
-class HomeRoute extends PageRouteInfo<void> {
-  const HomeRoute({List<PageRouteInfo>? children})
-      : super(
-          HomeRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'HomeRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [OrderPage]
-class OrderRoute extends PageRouteInfo<OrderRouteArgs> {
-  OrderRoute({
-    Key? key,
-    Cart? cart,
-    List<PageRouteInfo>? children,
-  }) : super(
-          OrderRoute.name,
-          args: OrderRouteArgs(
-            key: key,
-            cart: cart,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'OrderRoute';
-
-  static const PageInfo<OrderRouteArgs> page = PageInfo<OrderRouteArgs>(name);
-}
-
-class OrderRouteArgs {
-  const OrderRouteArgs({
-    this.key,
-    this.cart,
-  });
-
-  final Key? key;
-
-  final Cart? cart;
-
-  @override
-  String toString() {
-    return 'OrderRouteArgs{key: $key, cart: $cart}';
-  }
-}
-
-/// generated route for
-/// [OrderResultPage]
-class OrderResultRoute extends PageRouteInfo<OrderResultRouteArgs> {
-  OrderResultRoute({
-    Key? key,
-    Order? order,
-    List<PageRouteInfo>? children,
-  }) : super(
-          OrderResultRoute.name,
-          args: OrderResultRouteArgs(
-            key: key,
-            order: order,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'OrderResultRoute';
-
-  static const PageInfo<OrderResultRouteArgs> page =
-      PageInfo<OrderResultRouteArgs>(name);
-}
-
-class OrderResultRouteArgs {
-  const OrderResultRouteArgs({
-    this.key,
-    this.order,
-  });
-
-  final Key? key;
-
-  final Order? order;
-
-  @override
-  String toString() {
-    return 'OrderResultRouteArgs{key: $key, order: $order}';
-  }
 }
 
 /// generated route for
@@ -353,6 +209,138 @@ class ProductRouteArgs {
 }
 
 /// generated route for
+/// [HomePage]
+class HomeRoute extends PageRouteInfo<void> {
+  const HomeRoute({List<PageRouteInfo>? children})
+      : super(
+          HomeRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'HomeRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [AuthPage]
+class AuthRoute extends PageRouteInfo<void> {
+  const AuthRoute({List<PageRouteInfo>? children})
+      : super(
+          AuthRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'AuthRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [CatalogPage]
+class CatalogRoute extends PageRouteInfo<void> {
+  const CatalogRoute({List<PageRouteInfo>? children})
+      : super(
+          CatalogRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'CatalogRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ProfilePage]
+class ProfileRoute extends PageRouteInfo<void> {
+  const ProfileRoute({List<PageRouteInfo>? children})
+      : super(
+          ProfileRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfileRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [OrderPage]
+class OrderRoute extends PageRouteInfo<OrderRouteArgs> {
+  OrderRoute({
+    Key? key,
+    Cart? cart,
+    List<PageRouteInfo>? children,
+  }) : super(
+          OrderRoute.name,
+          args: OrderRouteArgs(
+            key: key,
+            cart: cart,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'OrderRoute';
+
+  static const PageInfo<OrderRouteArgs> page = PageInfo<OrderRouteArgs>(name);
+}
+
+class OrderRouteArgs {
+  const OrderRouteArgs({
+    this.key,
+    this.cart,
+  });
+
+  final Key? key;
+
+  final Cart? cart;
+
+  @override
+  String toString() {
+    return 'OrderRouteArgs{key: $key, cart: $cart}';
+  }
+}
+
+/// generated route for
+/// [AuthCodePage]
+class AuthCodeRoute extends PageRouteInfo<AuthCodeRouteArgs> {
+  AuthCodeRoute({
+    Key? key,
+    required String email,
+    List<PageRouteInfo>? children,
+  }) : super(
+          AuthCodeRoute.name,
+          args: AuthCodeRouteArgs(
+            key: key,
+            email: email,
+          ),
+          rawPathParams: {'email': email},
+          initialChildren: children,
+        );
+
+  static const String name = 'AuthCodeRoute';
+
+  static const PageInfo<AuthCodeRouteArgs> page =
+      PageInfo<AuthCodeRouteArgs>(name);
+}
+
+class AuthCodeRouteArgs {
+  const AuthCodeRouteArgs({
+    this.key,
+    required this.email,
+  });
+
+  final Key? key;
+
+  final String email;
+
+  @override
+  String toString() {
+    return 'AuthCodeRouteArgs{key: $key, email: $email}';
+  }
+}
+
+/// generated route for
 /// [RegistrationPage]
 class RegistrationRoute extends PageRouteInfo<RegistrationRouteArgs> {
   RegistrationRoute({
@@ -389,4 +377,56 @@ class RegistrationRouteArgs {
   String toString() {
     return 'RegistrationRouteArgs{key: $key, email: $email}';
   }
+}
+
+/// generated route for
+/// [OrderResultPage]
+class OrderResultRoute extends PageRouteInfo<OrderResultRouteArgs> {
+  OrderResultRoute({
+    Key? key,
+    Order? order,
+    List<PageRouteInfo>? children,
+  }) : super(
+          OrderResultRoute.name,
+          args: OrderResultRouteArgs(
+            key: key,
+            order: order,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'OrderResultRoute';
+
+  static const PageInfo<OrderResultRouteArgs> page =
+      PageInfo<OrderResultRouteArgs>(name);
+}
+
+class OrderResultRouteArgs {
+  const OrderResultRouteArgs({
+    this.key,
+    this.order,
+  });
+
+  final Key? key;
+
+  final Order? order;
+
+  @override
+  String toString() {
+    return 'OrderResultRouteArgs{key: $key, order: $order}';
+  }
+}
+
+/// generated route for
+/// [CartPage]
+class CartRoute extends PageRouteInfo<void> {
+  const CartRoute({List<PageRouteInfo>? children})
+      : super(
+          CartRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'CartRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }

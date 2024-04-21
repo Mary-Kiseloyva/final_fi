@@ -101,21 +101,21 @@ class ConfidentialNoteWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: padding,
-      child: const Text.rich(
-        TextSpan(
-          children: [
-            TextSpan(
-              text: 'Нажимая кнопку, вы соглашаетесь с ',
-              style: TextStyle(fontSize: 12),
-            ),
-            TextSpan(
-              text: 'Правилами и политикой конфиденциальности Компании.',
-              style:
-                  TextStyle(fontSize: 12, decoration: TextDecoration.underline),
-            ),
-          ],
-        ),
-      ),
+      // child: const Text.rich(
+      //   TextSpan(
+      //     children: [
+      //       TextSpan(
+      //         text: 'Нажимая кнопку, вы соглашаетесь с ',
+      //         style: TextStyle(fontSize: 12),
+      //       ),
+      //       TextSpan(
+      //         text: 'Правилами и политикой конфиденциальности Компании.',
+      //         style:
+      //             TextStyle(fontSize: 12, decoration: TextDecoration.underline),
+      //       ),
+      //     ],
+      //   ),
+      // ),
     );
   }
 }

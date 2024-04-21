@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:fi/view/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:fi/view/auth.dart';
 import 'package:fi/view/auth_code.dart';
@@ -52,6 +53,12 @@ class AppRouter extends _$AppRouter {
               AutoRoute(page: OrderResultRoute.page),
             ],
           ),
+          AutoRoute(
+              page: ProfileTab.page,
+              children: [
+                AutoRoute(page: ProfileRoute.page, initial: true),
+                AutoRoute(page: RegistrationRoute.page),
+              ])
         ]),
       ];
 }
@@ -64,4 +71,9 @@ class CatalogTabPage extends AutoRouter {
 @RoutePage(name: 'CartTab')
 class CartTabPage extends AutoRouter {
   const CartTabPage({super.key});
+}
+
+@RoutePage(name: 'ProfileTab')
+class ProfileTabPage extends AutoRouter {
+  const ProfileTabPage({super.key});
 }

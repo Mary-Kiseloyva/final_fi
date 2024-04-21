@@ -95,9 +95,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
                   SizedBox(
                     width: 250,
-                    child: OutlinedButton(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
                       onPressed: () {
-                        debugPrint('you');
                         registrationViewModel
                             .registerUser()
                             .then((value) => context.router.push(
@@ -106,7 +111,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             .catchError((error, stackTrace) =>
                                 context.showSnackBar('Неверные данные'));
                       },
-                      child: const Text('Сохранить'),
+                      child: const Text('Сохранить', style: TextStyle(color: Colors.white),),
                     ),
                   ),
                 ],

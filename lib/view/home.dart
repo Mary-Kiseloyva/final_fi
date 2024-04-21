@@ -20,7 +20,8 @@ class _ProductPageState extends State<HomePage> {
     return AutoTabsScaffold(
       routes: const [
         CatalogTab(),
-        CartTab()
+        CartTab(),
+        ProfileTab()
       ],
       bottomNavigationBuilder: (_, tabsRouter) {
         return NavigationBar(
