@@ -4,31 +4,17 @@ import 'package:fi/navigation/app_router.dart';
 import 'package:fi/view_model/cart_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../model/cart.dart';
 
 @RoutePage()
-class CartPage extends StatefulWidget {
+class CartPage extends StatelessWidget {
   const CartPage({super.key});
 
   @override
-  State<CartPage> createState() => _CartPageState();
-}
-
-class _CartPageState extends State<CartPage> {
-  final CartViewModel cartViewModel = CartViewModel();
-
-  @override
-  void initState() {
-    super.initState();
-    cartViewModel.init();
-    if (cartViewModel.isLoggedIn()) {
-      cartViewModel.loadCart();
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final cartViewModel = context.read<CartViewModel>();
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -40,16 +26,7 @@ class _CartPageState extends State<CartPage> {
             stream: cartViewModel.cartController.stream,
             builder: (context, snapshot) {
               final cart = snapshot.data;
-              if (!cartViewModel.isLoggedIn()) {
-                return Center(
-                  child: OutlinedButton(
-                    onPressed: () {
-                      context.router.navigate(const AuthRoute());
-                    },
-                    child: const Text("Войти / Зарегистрироваться"),
-                  ),
-                );
-              }
+
               if (cart == null) {
                 return const Center(
                   child: CupertinoActivityIndicator(),
@@ -79,12 +56,12 @@ class _CartPageState extends State<CartPage> {
                       final product = cart.products[index];
                       return ProductCard(
                         cartProduct: product,
-                        add: () => cartViewModel.addProduct(product.product.id),
+                        add: () => cartViewModel.addProduct(product.product),
                         delete: () =>
                             cartViewModel.deleteProduct(product.product.id),
                         decrease: () {
                           cartViewModel.decreaseProduct(
-                              product.product.id, product.count);
+                              product.product, product.count);
                         },
                       );
                     },
@@ -105,12 +82,6 @@ class _CartPageState extends State<CartPage> {
       ),
     );
   }
-
-  @override
-  void dispose() {
-    super.dispose();
-    cartViewModel.dispose();
-  }
 }
 
 class PlusMinusButtons extends StatelessWidget {
@@ -127,7 +98,7 @@ class PlusMinusButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = count == 1 ? Colors.grey : Colors.black;
+    final color = count == 1 ? Colors.grey : Colors.red;
 
     return Row(
       children: [
@@ -138,9 +109,13 @@ class PlusMinusButtons extends StatelessWidget {
             }
           },
           child: Container(
-            width: 32,
+            width: 42,
             height: 34,
-            color: color,
+            decoration:  BoxDecoration(
+              color: color,
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(10.0), bottomLeft:  Radius.circular(10.0)),
+            ),
             child: const Icon(
               Icons.remove,
               color: Colors.white,
@@ -154,11 +129,12 @@ class PlusMinusButtons extends StatelessWidget {
         InkWell(
           onTap: add,
           child: Container(
-            width: 32,
+            width: 42,
             height: 34,
             decoration: const BoxDecoration(
-              color: Colors.black,
+              color: Colors.red,
               shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.only(topRight: Radius.circular(10.0), bottomRight:  Radius.circular(10.0)),
             ),
             child: const Icon(
               Icons.add,
@@ -187,90 +163,86 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-          border: Border(bottom: BorderSide(color: Colors.grey))),
-      child: Card(
-        elevation: 0,
-        color: Colors.transparent,
-        child: Row(
-          children: [
-            GestureDetector(
-              onTap: () {
-                context.router.push(
-                  ProductRoute(
-                    productId: cartProduct.product.id,
-                  ),
-                );
-              },
-              child: Container(
-                height: 100,
-                width: 100,
-                padding: const EdgeInsets.all(5),
-                child: CachedNetworkImage(
-                  imageUrl: cartProduct.product.picture,
-                  fit: BoxFit.fill,
+    return Card(
+      elevation: 0,
+      color: Colors.transparent,
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: () {
+              context.router.push(
+                ProductRoute(
+                  productId: cartProduct.product.id,
                 ),
+              );
+            },
+            child: Container(
+              height: 100,
+              width: 100,
+              padding: const EdgeInsets.all(5),
+              child: CachedNetworkImage(
+                imageUrl: cartProduct.product.picture,
+                fit: BoxFit.fill,
               ),
             ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 44,
-                        child: Text(
-                          cartProduct.product.name,
-                          style: const TextStyle(
-                            fontSize: 16,
-                          ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 44,
+                      child: Text(
+                        cartProduct.product.name,
+                        style: const TextStyle(
+                          fontSize: 16,
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          delete.call();
-                        },
-                        child: const Icon(Icons.close),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Builder(builder: (context) {
-                        final price =
-                            Text('${cartProduct.product.price.toString()}₽');
-                        if (cartProduct.product.oldPrice != null) {
-                          return Column(children: [
-                            price,
-                            Text(
-                              '${cartProduct.product.oldPrice.toString()}₽',
-                              style: const TextStyle(
-                                color: Colors.grey,
-                                fontSize: 12,
-                                decoration: TextDecoration.lineThrough,
-                              ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        delete.call();
+                      },
+                      child: const Icon(Icons.close),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Builder(builder: (context) {
+                      final price =
+                          Text('${cartProduct.product.price.toString()}₽');
+                      if (cartProduct.product.oldPrice != null) {
+                        return Column(children: [
+                          price,
+                          Text(
+                            '${cartProduct.product.oldPrice.toString()}₽',
+                            style: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 12,
+                              decoration: TextDecoration.lineThrough,
                             ),
-                          ]);
-                        }
-                        return price;
-                      }),
-                      PlusMinusButtons(
-                        add: add,
-                        decrease: decrease,
-                        count: cartProduct.count,
-                      )
-                    ],
-                  ),
-                ]),
-              ),
+                          ),
+                        ]);
+                      }
+                      return price;
+                    }),
+                    PlusMinusButtons(
+                      add: add,
+                      decrease: decrease,
+                      count: cartProduct.count,
+                    )
+                  ],
+                ),
+              ]),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -332,11 +304,17 @@ class PriceCard extends StatelessWidget {
                   ),
                 ],
               ),
-            OutlinedButton(
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
               onPressed: () {
                 context.router.navigate(OrderRoute(cart: cart));
               },
-              child: const Text('Оформить заказ'),
+              child: const Text('Оформить заказ', style: TextStyle(color: Colors.white),),
             ),
           ],
         ),

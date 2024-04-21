@@ -1,3 +1,4 @@
+import 'package:fi/view_model/cart_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -13,6 +14,9 @@ class AppDependencies extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        Provider(
+          create: (context) => CartViewModel(),
+        ),
         ChangeNotifierProvider(
           create: (context) => ValueNotifier(ThemeMode.light),
         ),

@@ -1,8 +1,11 @@
 import 'package:auto_route/annotations.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:fi/view_model/cart_view_model.dart';
 import 'package:fi/view_model/product_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
+import 'package:provider/provider.dart';
 
 @RoutePage()
 class ProductPage extends StatefulWidget {
@@ -37,11 +40,9 @@ class _ProductPageState extends State<ProductPage> {
 
   @override
   Widget build(BuildContext context) {
+    final cartViewModel = context.read<CartViewModel>();
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text('Продукт'),
-      ),
+      appBar: AppBar(),
       body: SafeArea(
         child: FutureBuilder(
           future: productViewModel.getProductDetails(widget.productId),
@@ -92,51 +93,53 @@ class _ProductPageState extends State<ProductPage> {
                         ),
                     ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 15),
-                    child: StreamBuilder(
-                      stream: productViewModel.cartController.stream,
-                      builder: (context, snapshot) {
-                        final cart =
-                            productViewModel.cartController.valueOrNull;
-                        if (productViewModel.isLoggedIn() && cart != null) {
-                          final cartProduct = cart.products
-                              .where((e) => e.product.id == details.id);
-                          if (cartProduct.isNotEmpty) {
-                            final id = cartProduct.first.product.id;
-                            final count = cartProduct.first.count;
-                            return PlusMinusButtons(
-                              count: count,
-                              add: () => productViewModel.addProduct(id),
-                              decrease: () =>
-                                  productViewModel.decreaseProduct(id, count),
-                              delete: () => productViewModel.deleteProduct(id),
-                            );
-                          } else {
-                            return SizedBox(
-                              width: 250,
-                              child: OutlinedButton(
-                                onPressed: () =>
-                                    productViewModel.addProduct(details.id),
-                                child: const Text('В корзину'),
-                              ),
-                            );
-                          }
-                        }
-                        return const SizedBox(
-                          height: 0,
-                        );
-                      },
-                    ),
-                  ),
                   if (details.description != null)
                     Container(
                       alignment: Alignment.centerLeft,
-                      padding: const EdgeInsets.only(top: 20),
+                      padding: const EdgeInsets.only(top: 10),
                       child: Text(
                         details.description!,
                       ),
                     ),
+                  Padding(
+                      padding: const EdgeInsets.only(top: 15),
+                      child: StreamBuilder(
+                          stream: cartViewModel.cartController.stream,
+                          builder: (context, snapshot) {
+                            final cart =
+                                cartViewModel.cartController.valueOrNull;
+                            final cartProduct = cart?.products
+                                .firstWhereOrNull((e) => e.product.id == details.id);
+                            if (cartProduct != null) {
+                              final id = cartProduct.product.id;
+                              final count = cartProduct.count;
+                              return PlusMinusButtons(
+                                count: count,
+                                add: () => cartViewModel.addProduct(cartProduct.product),
+                                decrease: () =>
+                                    cartViewModel.decreaseProduct(cartProduct.product, count),
+                                delete: () =>
+                                    cartViewModel.deleteProduct(id),
+                              );
+                            } else {
+                              return SizedBox(
+                                height: 50,
+                                width: 345,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.red,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                  onPressed: () =>
+                                      cartViewModel.addProduct2(details),
+                                  child: const Text('В КОРЗИНУ', style: TextStyle(color: Colors.white),),
+                                ),
+                              );
+                            }
+                          })),
+
                 ],
               ),
             );
@@ -164,7 +167,7 @@ class PlusMinusButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 34,
+      height: 50,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -178,8 +181,11 @@ class PlusMinusButtons extends StatelessWidget {
               }
             },
             child: Container(
-              width: 32,
-              color: Colors.black,
+              width: 80,
+              decoration: const BoxDecoration(
+                color: Colors.red,
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(10.0), bottomLeft:  Radius.circular(10.0)),
+              ),
               child: const Icon(
                 Icons.remove,
                 color: Colors.white,
@@ -189,16 +195,25 @@ class PlusMinusButtons extends StatelessWidget {
           ),
           Container(
               alignment: Alignment.center,
-              padding: const EdgeInsets.symmetric(horizontal: 30),
+              padding: const EdgeInsets.symmetric(horizontal: 55),
               color: const Color(0xFFE6E6E6),
-              child: Text(count.toString())),
+              child: Column(
+                children: [
+                  const Text('В КОРЗИНЕ'),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5.0),
+                    child: Text(count.toString()),
+                  ),
+                ],
+              )),
           InkWell(
             onTap: add,
             child: Container(
-              width: 32,
+              width: 80,
               decoration: const BoxDecoration(
-                color: Colors.black,
+                color: Colors.red,
                 shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.only(topRight: Radius.circular(10.0), bottomRight:  Radius.circular(10.0)),
               ),
               child: const Icon(
                 Icons.add,

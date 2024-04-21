@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:fi/navigation/app_router.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 @RoutePage()
 class HomePage extends StatefulWidget {
@@ -27,15 +28,19 @@ class _ProductPageState extends State<HomePage> {
           selectedIndex: tabsRouter.activeIndex,
           labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
           onDestinationSelected: tabsRouter.setActiveIndex,
-          destinations: const [
+          destinations: [
             NavigationDestination(
-              label: 'Каталог',
-              icon: Icon(Icons.apps_rounded),
+              label: 'Меню',
+              icon:  SvgPicture.asset('assets/svg/menu.svg', color: Colors.red, height: 40,),
             ),
             NavigationDestination(
               label: 'Корзина',
-              icon: Icon(Icons.shopping_cart_outlined),
-            )
+              icon: SvgPicture.asset('assets/svg/catalog.svg', height: 30, color: Colors.red),
+            ),
+            NavigationDestination(
+              label: 'Профиль',
+              icon: SvgPicture.asset('assets/svg/profile.svg', color: Colors.red, height: 35),
+            ),
           ],
         );
       },
