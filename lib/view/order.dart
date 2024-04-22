@@ -8,6 +8,7 @@ import 'package:fi/view_model/order_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 import '../model/cart.dart';
 import '../model/payment.dart';
@@ -61,7 +62,7 @@ class _OrderPageState extends State<OrderPage> {
                         orderViewModel.paymentController.valueOrNull;
                     return OrderDetails(
                       orderViewModel: orderViewModel,
-                      payments: payments,
+                      //payments: payments,
                       selectedDate: selectedDate,
                       selectedPayment: selectedPayment,
                       cart: widget.cart!,
@@ -81,14 +82,18 @@ class OrderDetails extends StatelessWidget {
   final DateFormat dateFormatter = DateFormat('dd MMMM', 'ru');
   final OrderViewModel orderViewModel;
   final Cart cart;
-  final List<Payment>? payments;
+  final List<Payment>? payments = [
+    Payment(id: '1', title: 'Онлайн', type: '', description: '', icon: 'assets/svg/1.svg'),
+    Payment(id: '2', title: 'Картой курьеру', type: '', description: '', icon: 'assets/svg/1.svg')
+  ];
   final DateTime? selectedDate;
   final Payment? selectedPayment;
+  late final _mapController;
 
   OrderDetails({
     super.key,
     this.selectedPayment,
-    this.payments,
+    //this.payments,
     this.selectedDate,
     required this.orderViewModel,
     required this.cart,
@@ -133,6 +138,25 @@ class OrderDetails extends StatelessWidget {
                   ),
                 ),
               ),
+              SizedBox(
+                height: 400,
+                child: YandexMap(
+                  onMapCreated: (controller) async {
+                    _mapController = controller;
+                    await _mapController.moveCamera(
+                      CameraUpdate.newCameraPosition(
+                        const CameraPosition(
+                          target: Point(
+                            latitude: 50,
+                            longitude: 20,
+                          ),
+                          zoom: 3,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
               Container(
                 alignment: Alignment.topLeft,
                 padding: const EdgeInsets.only(top: 20, bottom: 10),
@@ -140,7 +164,13 @@ class OrderDetails extends StatelessWidget {
               ),
               SizedBox(
                 width: 250,
-                child: OutlinedButton(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
                   onPressed: () async {
                     final res = await showDatePicker(
                       context: context,
@@ -156,6 +186,7 @@ class OrderDetails extends StatelessWidget {
                     selectedDate != null
                         ? dateFormatter.format(selectedDate!)
                         : 'Выбрать дату',
+                    style: const TextStyle(color: Colors.black),
                   ),
                 ),
               ),
@@ -169,13 +200,13 @@ class OrderDetails extends StatelessWidget {
             ],
           ),
         ),
-        if (payments == null)
-          const SliverToBoxAdapter(
-            child: Center(
-              child: CupertinoActivityIndicator(),
-            ),
-          ),
-        if (payments != null)
+        // if (payments == null)
+        //   const SliverToBoxAdapter(
+        //     child: Center(
+        //       child: CupertinoActivityIndicator(),
+        //     ),
+        //   ),
+        //if (payments != null)
           SliverList(
             delegate: SliverChildBuilderDelegate(
               (context, index) {
@@ -235,7 +266,13 @@ class OrderDetails extends StatelessWidget {
                     ],
                   ),
                 ),
-                OutlinedButton(
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
                   onPressed: () {
                     orderViewModel
                         .makeOrder()
@@ -244,7 +281,7 @@ class OrderDetails extends StatelessWidget {
                         .catchError((error, stackTrace) =>
                             {context.showSnackBar('Неверные данные')});
                   },
-                  child: const Text('Перейти к оплате'),
+                  child: const Text('Перейти к оплате', style: TextStyle(color: Colors.white),),
                 ),
                 const ConfidentialNoteWidget(
                   padding: EdgeInsets.symmetric(vertical: 10),
