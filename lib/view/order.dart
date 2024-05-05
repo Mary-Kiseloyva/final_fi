@@ -104,6 +104,7 @@ class OrderDetails extends StatelessWidget {
   final TimeOfDay? selectedTime;
   final Payment? selectedPayment;
   late final _mapController;
+  int selectedIndex = -1;
 
   OrderDetails({
     super.key,
@@ -117,6 +118,14 @@ class OrderDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final List<String> districts = [
+      'Ленинский район',
+      'Советский район',
+      'Центральный район',
+      'Железнодорожный район',
+      'Коминтерновский район',
+      'Левобережный район',
+    ];
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: CustomScrollView(slivers: [
@@ -159,48 +168,48 @@ class OrderDetails extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 20, bottom: 10),
                   child: const Text('Выберите район доставки')),
               SizedBox(
+                height: 350,
+                child: StreamBuilder<int?>(
+                    stream: orderViewModel.distinctController,
+                    initialData: -1,
+                    builder: (context, snapshot) {
+                      return ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: districts.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              title: Text(districts[index]),
+                              leading: CircleAvatar(
+                                backgroundColor: snapshot.data == index
+                                    ? Colors.red
+                                    : Colors.grey,
+                                child: snapshot.data == index
+                                    ? const Icon(Icons.check,
+                                        color: Colors.white)
+                                    : const SizedBox(),
+                              ),
+                              onTap: () {
+                                orderViewModel.chooseDistinct(index);
+                              },
+                            );
+                          });
+                    }),
+              ),
+              SizedBox(
                 height: 400,
                 child: YandexMap(
-                  mapObjects:
-                    orderViewModel.map,
-
+                  mapObjects: orderViewModel.map,
                   onMapCreated: (controller) async {
                     _mapController = controller;
                     await _mapController.moveCamera(
                       CameraUpdate.newCameraPosition(
                         const CameraPosition(
-                          target:  Point( latitude: 55.755864, longitude: 37.617698),
+                          target:
+                              Point(latitude: 55.755864, longitude: 37.617698),
                           zoom: 3,
                         ),
                       ),
                     );
-
-                      // onTap: (_, point) => showModalBottomSheet(
-                      //   context: context,
-                      //   builder: (context) => _ModalBodyView(
-                      //     point: MapPoint(
-                      //       name: 'Неизвестный населенный пункт',
-                      //       latitude: point.latitude,
-                      //       longitude: point.longitude,
-                      //     ),
-                      //     mapId: const MapObjectId('polygon map object'),
-                      //   ),
-                      // ),
-
-
-                    // final balloon = BalloonMapObject(
-                    //   balloonId: const BalloonId(''),
-                    //   consumeTapEvents: false,
-                    //   geometry: Point(latitude: 50.5, longitude: 20.5),
-                    //   content: const Text('Название района'),
-                    // );
-                    // _mapController.mapObjects.add(balloon);
-                    // polygon.onTap?.listen((event) {
-                    //   _mapController.mapObjects.update(balloon, (b) => b..isVisible = true);
-                    // });
-                    // polygon.onTap.listen((event) {
-                    //   _mapController.mapObjects.update(balloon, (b) => b..isVisible = false);
-                    // });
                   },
                 ),
               ),

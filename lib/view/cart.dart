@@ -39,11 +39,20 @@ class CartPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text('В вашей корзине пока ничего нет'),
-                      OutlinedButton(
+                      ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
                           onPressed: () {
                             context.router.navigate(const CatalogTab());
                           },
-                          child: const Text('Перейти к покупкам')),
+                          child: const Text(
+                            'Перейти к покупкам',
+                            style: TextStyle(color: Colors.white),
+                          )),
                     ],
                   ),
                 );
@@ -111,10 +120,12 @@ class PlusMinusButtons extends StatelessWidget {
           child: Container(
             width: 42,
             height: 34,
-            decoration:  BoxDecoration(
+            decoration: BoxDecoration(
               color: color,
               shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.only(topLeft: Radius.circular(10.0), bottomLeft:  Radius.circular(10.0)),
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(10.0),
+                  bottomLeft: Radius.circular(10.0)),
             ),
             child: const Icon(
               Icons.remove,
@@ -134,7 +145,9 @@ class PlusMinusButtons extends StatelessWidget {
             decoration: const BoxDecoration(
               color: Colors.red,
               shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.only(topRight: Radius.circular(10.0), bottomRight:  Radius.circular(10.0)),
+              borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(10.0),
+                  bottomRight: Radius.circular(10.0)),
             ),
             child: const Icon(
               Icons.add,
@@ -314,7 +327,10 @@ class PriceCard extends StatelessWidget {
               onPressed: () {
                 context.router.navigate(OrderRoute(cart: cart));
               },
-              child: const Text('Оформить заказ', style: TextStyle(color: Colors.white),),
+              child: const Text(
+                'Оформить заказ',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ],
         ),

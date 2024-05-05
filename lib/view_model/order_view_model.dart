@@ -4,6 +4,7 @@ import 'package:fi/model/payment.dart';
 import 'package:fi/util/value_stream_wrapper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 import '../data/entity/order/order_request.dart';
@@ -23,15 +24,34 @@ class OrderViewModel extends BaseViewModel {
   final ValueStreamWrapper<Payment> paymentController = ValueStreamWrapper();
   final ValueStreamWrapper<DateTime> dateController = ValueStreamWrapper();
   final ValueStreamWrapper<TimeOfDay> timeController = ValueStreamWrapper();
+  final BehaviorSubject<int?> distinctController =BehaviorSubject.seeded(
+   -1
+  );
   final List<MapObject> map = [
     PolygonMapObject(
       consumeTapEvents: false,
       polygon: const Polygon(
         outerRing: LinearRing(points: [
-          Point(latitude: 55.755864, longitude: 37.617698),
-          Point(latitude: 50.0, longitude: 21.0),
-          Point(latitude: 51.0, longitude: 21.0),
-          Point(latitude: 51.0, longitude: 20.0),
+          Point(latitude: 51.658192, longitude: 39.149170),
+          Point(latitude: 51.658192, longitude: 39.196428),
+          Point(latitude: 51.625276, longitude: 39.196428),
+          Point(latitude: 51.625276, longitude: 39.149170),
+        ]),
+        innerRings: [],
+      ),
+      strokeWidth: 2.0,
+      strokeColor: Colors.orange,
+      fillColor: Colors.orange.withOpacity(0.5),
+      mapId: const MapObjectId('polygon map object'),
+    ),
+    PolygonMapObject(
+      consumeTapEvents: false,
+      polygon: const Polygon(
+        outerRing: LinearRing(points: [
+          Point(latitude: 51.673582, longitude: 39.201915),
+          Point(latitude: 51.673582, longitude: 39.240453),
+          Point(latitude: 51.648134, longitude: 39.240453),
+          Point(latitude: 51.648134, longitude: 39.201915),
         ]),
         innerRings: [],
       ),
@@ -39,7 +59,7 @@ class OrderViewModel extends BaseViewModel {
       strokeColor: Colors.blue,
       fillColor: Colors.orange.withOpacity(0.5),
       mapId: const MapObjectId('polygon map object'),
-    )
+    ),
   ];
   late final List<ProductWithCount> products;
 
@@ -49,6 +69,10 @@ class OrderViewModel extends BaseViewModel {
         request: PaymentsRequest(products: products, deliveryId: ''),
       );
     });
+  }
+
+  void chooseDistinct(int index){
+    distinctController.add(index);
   }
 
   Future<Order> makeOrder() {
