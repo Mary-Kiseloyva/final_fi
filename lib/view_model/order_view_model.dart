@@ -3,6 +3,8 @@ import 'package:fi/data/service/order_service.dart';
 import 'package:fi/model/payment.dart';
 import 'package:fi/util/value_stream_wrapper.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 import '../data/entity/order/order_request.dart';
 import '../data/entity/order/product_with_count.dart';
@@ -20,6 +22,25 @@ class OrderViewModel extends BaseViewModel {
   final TextEditingController mailController = TextEditingController();
   final ValueStreamWrapper<Payment> paymentController = ValueStreamWrapper();
   final ValueStreamWrapper<DateTime> dateController = ValueStreamWrapper();
+  final ValueStreamWrapper<TimeOfDay> timeController = ValueStreamWrapper();
+  final List<MapObject> map = [
+    PolygonMapObject(
+      consumeTapEvents: false,
+      polygon: const Polygon(
+        outerRing: LinearRing(points: [
+          Point(latitude: 55.755864, longitude: 37.617698),
+          Point(latitude: 50.0, longitude: 21.0),
+          Point(latitude: 51.0, longitude: 21.0),
+          Point(latitude: 51.0, longitude: 20.0),
+        ]),
+        innerRings: [],
+      ),
+      strokeWidth: 2.0,
+      strokeColor: Colors.blue,
+      fillColor: Colors.orange.withOpacity(0.5),
+      mapId: const MapObjectId('polygon map object'),
+    )
+  ];
   late final List<ProductWithCount> products;
 
   Future<List<Payment>> getPayments() {

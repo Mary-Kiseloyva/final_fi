@@ -7,6 +7,7 @@ import 'package:fi/view/auth.dart';
 import 'package:fi/view_model/order_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
@@ -80,13 +81,27 @@ class _OrderPageState extends State<OrderPage> {
 
 class OrderDetails extends StatelessWidget {
   final DateFormat dateFormatter = DateFormat('dd MMMM', 'ru');
+  final DateFormat timeFormatter = DateFormat.jm('ru');
   final OrderViewModel orderViewModel;
   final Cart cart;
   final List<Payment>? payments = [
-    Payment(id: '1', title: 'Онлайн', type: '', description: '', icon: 'assets/svg/1.svg'),
-    Payment(id: '2', title: 'Картой курьеру', type: '', description: '', icon: 'assets/svg/1.svg')
+    Payment(
+      id: '1',
+      title: 'Онлайн',
+      type: '',
+      description: '',
+      icon: 'assets/svg/2.svg',
+    ),
+    Payment(
+      id: '2',
+      title: 'Картой курьеру',
+      type: '',
+      description: '',
+      icon: 'assets/svg/1.svg',
+    )
   ];
   final DateTime? selectedDate;
+  final TimeOfDay? selectedTime;
   final Payment? selectedPayment;
   late final _mapController;
 
@@ -95,6 +110,7 @@ class OrderDetails extends StatelessWidget {
     this.selectedPayment,
     //this.payments,
     this.selectedDate,
+    this.selectedTime,
     required this.orderViewModel,
     required this.cart,
   });
@@ -138,22 +154,53 @@ class OrderDetails extends StatelessWidget {
                   ),
                 ),
               ),
+              Container(
+                  alignment: Alignment.topLeft,
+                  padding: const EdgeInsets.only(top: 20, bottom: 10),
+                  child: const Text('Выберите район доставки')),
               SizedBox(
                 height: 400,
                 child: YandexMap(
+                  mapObjects:
+                    orderViewModel.map,
+
                   onMapCreated: (controller) async {
                     _mapController = controller;
                     await _mapController.moveCamera(
                       CameraUpdate.newCameraPosition(
                         const CameraPosition(
-                          target: Point(
-                            latitude: 50,
-                            longitude: 20,
-                          ),
+                          target:  Point( latitude: 55.755864, longitude: 37.617698),
                           zoom: 3,
                         ),
                       ),
                     );
+
+                      // onTap: (_, point) => showModalBottomSheet(
+                      //   context: context,
+                      //   builder: (context) => _ModalBodyView(
+                      //     point: MapPoint(
+                      //       name: 'Неизвестный населенный пункт',
+                      //       latitude: point.latitude,
+                      //       longitude: point.longitude,
+                      //     ),
+                      //     mapId: const MapObjectId('polygon map object'),
+                      //   ),
+                      // ),
+
+
+                    // final balloon = BalloonMapObject(
+                    //   balloonId: const BalloonId(''),
+                    //   consumeTapEvents: false,
+                    //   geometry: Point(latitude: 50.5, longitude: 20.5),
+                    //   content: const Text('Название района'),
+                    // );
+                    // _mapController.mapObjects.add(balloon);
+                    // polygon.onTap?.listen((event) {
+                    //   _mapController.mapObjects.update(balloon, (b) => b..isVisible = true);
+                    // });
+                    // polygon.onTap.listen((event) {
+                    //   _mapController.mapObjects.update(balloon, (b) => b..isVisible = false);
+                    // });
                   },
                 ),
               ),
@@ -166,7 +213,7 @@ class OrderDetails extends StatelessWidget {
                 width: 250,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey,
+                    backgroundColor: Colors.red,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -186,7 +233,33 @@ class OrderDetails extends StatelessWidget {
                     selectedDate != null
                         ? dateFormatter.format(selectedDate!)
                         : 'Выбрать дату',
-                    style: const TextStyle(color: Colors.black),
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 250,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  onPressed: () async {
+                    final res = await showTimePicker(
+                      context: context,
+                      initialTime: TimeOfDay.now(),
+                    );
+                    if (res != null) {
+                      orderViewModel.timeController.add(res);
+                    }
+                  },
+                  child: Text(
+                    selectedTime != null
+                        ? timeFormatter.format(selectedTime! as DateTime)
+                        : 'Выбрать время',
+                    style: const TextStyle(color: Colors.white),
                   ),
                 ),
               ),
@@ -207,19 +280,19 @@ class OrderDetails extends StatelessWidget {
         //     ),
         //   ),
         //if (payments != null)
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                final payment = payments![index];
-                return PaymentCard(
-                  payment: payment,
-                  selected: selectedPayment,
-                  onTap: () => orderViewModel.paymentController.add(payment),
-                );
-              },
-              childCount: payments?.length,
-            ),
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              final payment = payments![index];
+              return PaymentCard(
+                payment: payment,
+                selected: selectedPayment,
+                onTap: () => orderViewModel.paymentController.add(payment),
+              );
+            },
+            childCount: payments?.length,
           ),
+        ),
         SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           sliver: SliverList(
@@ -281,7 +354,10 @@ class OrderDetails extends StatelessWidget {
                         .catchError((error, stackTrace) =>
                             {context.showSnackBar('Неверные данные')});
                   },
-                  child: const Text('Перейти к оплате', style: TextStyle(color: Colors.white),),
+                  child: const Text(
+                    'Перейти к оплате',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
                 const ConfidentialNoteWidget(
                   padding: EdgeInsets.symmetric(vertical: 10),
@@ -318,9 +394,9 @@ class PaymentCard extends StatelessWidget {
             aspectRatio: 1.0,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
-              child: CachedNetworkImage(
+              child: SvgPicture.asset(
+                payment.icon,
                 fit: BoxFit.fill,
-                imageUrl: payment.icon,
               ),
             ),
           ),

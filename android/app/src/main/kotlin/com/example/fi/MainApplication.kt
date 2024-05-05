@@ -7,6 +7,6 @@ class MainApplication: FlutterApplication() {
     override fun onCreate() {
         super.onCreate()
 
-        MapKitFactory.setApiKey("c62c81c3-d678-45d2-8e20-5cfaf6ad55c8")
+        MapKitFactory.setApiKey("7989056b-d87c-42e5-9672-a180feee23b3")
     }
 }
