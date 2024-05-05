@@ -24,19 +24,27 @@ class OrderViewModel extends BaseViewModel {
   final ValueStreamWrapper<Payment> paymentController = ValueStreamWrapper();
   final ValueStreamWrapper<DateTime> dateController = ValueStreamWrapper();
   final ValueStreamWrapper<TimeOfDay> timeController = ValueStreamWrapper();
-  final BehaviorSubject<int?> distinctController =BehaviorSubject.seeded(
-   -1
-  );
+  final BehaviorSubject<int?> distinctController = BehaviorSubject.seeded(-1);
+
   final List<MapObject> map = [
     PolygonMapObject(
       consumeTapEvents: false,
-      polygon: const Polygon(
+      polygon: Polygon(
         outerRing: LinearRing(points: [
-          Point(latitude: 51.658192, longitude: 39.149170),
-          Point(latitude: 51.658192, longitude: 39.196428),
-          Point(latitude: 51.625276, longitude: 39.196428),
-          Point(latitude: 51.625276, longitude: 39.149170),
-        ]),
+          [39.248476814452964, 51.704800832784684],
+          [39.23869211596663, 51.67956957861087],
+          [39.24624521655261, 51.675941090030896],
+          [39.26632959765608, 51.66718882700177],
+          [39.30237848681622, 51.65058687911495],
+          [39.32297785205061, 51.67828896895326],
+          [39.3703563920897, 51.68885291000555],
+          [39.388895820800556, 51.72111626964915],
+          [39.337740730468546, 51.7450455329106],
+          [39.27765924853501, 51.743020832405804],
+          [39.2453869096678, 51.73151027575566],
+          [39.25057858648082, 51.71259009706071],
+          [39.248476814452964, 51.704800832784684]
+        ].map((e) => Point(latitude: e[1], longitude:e[0])).toList()),
         innerRings: [],
       ),
       strokeWidth: 2.0,
@@ -71,7 +79,7 @@ class OrderViewModel extends BaseViewModel {
     });
   }
 
-  void chooseDistinct(int index){
+  void chooseDistinct(int index) {
     distinctController.add(index);
   }
 
