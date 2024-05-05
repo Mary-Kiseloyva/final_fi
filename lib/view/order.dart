@@ -273,6 +273,40 @@ class OrderDetails extends StatelessWidget {
                 ),
               ),
               const Padding(
+                padding: EdgeInsets.symmetric(vertical: 16.0),
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Text('Адрес доставки'),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: TextField(
+                  controller: orderViewModel.nameController,
+                  decoration: const InputDecoration(
+                    hintText: 'Улица',
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: TextField(
+                  controller: orderViewModel.phoneController,
+                  decoration: const InputDecoration(
+                    hintText: 'Дом',
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: TextField(
+                  controller: orderViewModel.mailController,
+                  decoration: const InputDecoration(
+                    hintText: 'Квартира',
+                  ),
+                ),
+              ),
+              const Padding(
                 padding: EdgeInsets.only(top: 20, bottom: 10),
                 child: Align(
                   alignment: Alignment.topLeft,
@@ -282,13 +316,6 @@ class OrderDetails extends StatelessWidget {
             ],
           ),
         ),
-        // if (payments == null)
-        //   const SliverToBoxAdapter(
-        //     child: Center(
-        //       child: CupertinoActivityIndicator(),
-        //     ),
-        //   ),
-        //if (payments != null)
         SliverList(
           delegate: SliverChildBuilderDelegate(
             (context, index) {
