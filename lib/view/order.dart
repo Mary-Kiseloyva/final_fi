@@ -206,7 +206,7 @@ class OrderDetails extends StatelessWidget {
                         const CameraPosition(
                           target:
                               Point(latitude: 51.704800832784684, longitude: 39.248476814452964),
-                          zoom: 5,
+                          zoom: 11,
                         ),
                       ),
                     );
